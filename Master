@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <mpi.h>
+
+#define MASTER 0 // Define the rank of the master process
+#define TAG 0 // Define the tag for message passing
+
+int main(int argc, char** argv) {
+    int rank, size;
+    char message[] = "Hello World!"; // Define the message to be sent
+    MPI_Status status; // MPI status for message status
+
+    MPI_Init(&argc, &argv); // Initialize MPI
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Get the rank of the current process
+    MPI_Comm_size(MPI_COMM_WORLD, &size); // Get the total number of processes
+
+    if (rank == MASTER) {
+        // Master sends "Hello World!" message to each worker
+        for (int dest = 1; dest < size; dest++) {
+            MPI_Send(message, sizeof(message), MPI_CHAR, dest, TAG, MPI_COMM_WORLD); // Send message to each worker
+        }
+    } else {
+        // Workers receive "Hello World!" message from master
+        MPI_Recv(message, sizeof(message), MPI_CHAR, MASTER, TAG, MPI_COMM_WORLD, &status); // Receive message from master
+        printf("Rank %d received: %s\n", rank, message); // Print received message
+    }
+
+    MPI_Finalize(); // Finalize MPI
+    return 0;
+}
