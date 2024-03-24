@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define VECTOR_SIZE 1000000 // Define the size of the vectors
+
+int main() {
+    int *v1, *v2, *v3; // Declare pointers for vectors
+    clock_t start, end; // Declare variables to measure time
+    double cpu_time_used; // Declare a variable to store CPU time
+
+    // Allocate memory for vectors
+    v1 = (int*)malloc(sizeof(int) * VECTOR_SIZE);
+    v2 = (int*)malloc(sizeof(int) * VECTOR_SIZE);
+    v3 = (int*)malloc(sizeof(int) * VECTOR_SIZE);
+
+    // Initialize vectors v1 and v2
+    for (int i = 0; i < VECTOR_SIZE; i++) {
+        v1[i] = i; // Assign value to v1
+        v2[i] = VECTOR_SIZE - i; // Assign value to v2
+    }
+
+    // Perform vector addition
+    start = clock(); // Record the start time
+    for (int i = 0; i < VECTOR_SIZE; i++) {
+        v3[i] = v1[i] + v2[i]; // Add corresponding elements and store in v3
+    }
+    end = clock(); // Record the end time
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; // Calculate CPU time
+
+    // Print execution time
+    printf("Sequential Execution Time: %f seconds\n", cpu_time_used);
+
+    // Clean up
+    free(v1); // Free memory allocated for v1
+    free(v2); // Free memory allocated for v2
+    free(v3); // Free memory allocated for v3
+
+    return 0;
+}
